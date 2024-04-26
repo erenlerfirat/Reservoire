@@ -5,9 +5,16 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservoireApi", "ReservoireApi\ReservoireApi.csproj", "{D28B2591-3F45-4B48-A9A8-A1CBA6AE8031}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{6EC413E8-6017-4755-8671-184962A2DE74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{6EC413E8-6017-4755-8671-184962A2DE74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{093A1C9C-568D-43D0-A278-23A044B97255}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{093A1C9C-568D-43D0-A278-23A044B97255}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{28388464-7A52-463B-8B0F-82B0E559CFE4}"
+	ProjectSection(SolutionItems) = preProject
+		Notes.txt = Notes.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utiliy", "Utiliy\Utiliy.csproj", "{8DF35760-1CCA-45F0-A0FC-BFAD282A2B22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +34,10 @@ Global
 		{093A1C9C-568D-43D0-A278-23A044B97255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{093A1C9C-568D-43D0-A278-23A044B97255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{093A1C9C-568D-43D0-A278-23A044B97255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DF35760-1CCA-45F0-A0FC-BFAD282A2B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DF35760-1CCA-45F0-A0FC-BFAD282A2B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DF35760-1CCA-45F0-A0FC-BFAD282A2B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DF35760-1CCA-45F0-A0FC-BFAD282A2B22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

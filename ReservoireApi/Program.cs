@@ -1,9 +1,11 @@
 
+using Business.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ReservoireApi;
 using System.Text;
+using Utiliy.Helper;
 
 namespace Reservoire
 {
@@ -14,7 +16,7 @@ namespace Reservoire
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddAuthorization();
+            //builder.Services.AddAuthorization();
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,6 +29,8 @@ namespace Reservoire
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
+
+            builder.Services.AddDbContext<CoreDbContext>(options => options.UseSqlServer(AppSettingsHelper.GetValue("ConnectionString","")));
 
             builder.Services.AddSwaggerGen(c =>
             {
@@ -58,7 +62,7 @@ namespace Reservoire
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                        .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+                        .GetBytes(AppSettingsHelper.GetValue("Token", ""))),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
@@ -88,42 +92,7 @@ namespace Reservoire
             });
 
             app.UseAuthorization();
-
-            //var summaries = new[]
-            //{
-            //    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            //};
-
-            //app.MapGet("/GetWeatherForecastAuth", (HttpContext httpContext) =>
-            //{
-            //    var forecast = Enumerable.Range(1, 5).Select(index =>
-            //        new WeatherForecast
-            //        {
-            //            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            //            TemperatureC = Random.Shared.Next(-20, 55),
-            //            Summary = summaries[Random.Shared.Next(summaries.Length)]
-            //        })
-            //        .ToArray();
-            //    return forecast;
-            //})
-            //.RequireAuthorization()
-            //.WithName("GetWeatherForecastAuth")
-            //.WithOpenApi();
-
-            //app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            //{
-            //    var forecast = Enumerable.Range(1, 5).Select(index =>
-            //        new WeatherForecast
-            //        {
-            //            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            //            TemperatureC = Random.Shared.Next(-20, 55),
-            //            Summary = summaries[Random.Shared.Next(summaries.Length)]
-            //        })
-            //        .ToArray();
-            //    return forecast;
-            //})
-            //.WithName("GetWeatherForecast")
-            //.WithOpenApi();
+            app.UseAuthorization();
 
             app.MapControllers();
             app.Run();
