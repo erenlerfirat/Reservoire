@@ -32,6 +32,8 @@ namespace Reservoire
 
             builder.Services.AddDbContext<CoreDbContext>(options => options.UseSqlServer(AppSettingsHelper.GetValue("ConnectionString","")));
 
+            builder.Services.RegisterDependencies();
+
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReservoireAPI", Version = "v1" });
@@ -55,22 +57,27 @@ namespace Reservoire
                 });
             });
 
+            var key = Encoding.ASCII.GetBytes(AppSettingsHelper.GetValue("Token", ""));
             // Add JWT Authentication Middleware - This code will intercept HTTP request and validate the JWT.
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                opt => {
-                    opt.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                        .GetBytes(AppSettingsHelper.GetValue("Token", ""))),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                }
-              );
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             var app = builder.Build();
-
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

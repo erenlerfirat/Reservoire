@@ -1,18 +1,23 @@
 ﻿using Business.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Domain.Models;
+using Utiliy.Abstract;
 namespace Business.Concrete
 {
-    internal class LoginService : ILoginService
+    public class LoginService : ILoginService
     {
-        public void Login(string username, string password)
+        private readonly CoreDbContext context;
+        private readonly IHashHelper hashHelper;
+        public LoginService(CoreDbContext context, IHashHelper hashHelper)
+        {
+            this.context = context;
+            this.hashHelper = hashHelper;
+        }
+        public void Login(string email, string password)
         {
             // go check user credentials
             // create jwt token
+            
+
             throw new NotImplementedException();
         }
 
@@ -25,7 +30,10 @@ namespace Business.Concrete
         public void Register(string username, string password, string email)
         {
             // add user credentials to table
-            throw new NotImplementedException();
+            string hash = hashHelper.Encrypt(password);
+            User user = new() { Email = email, PasswordHash = hash };
+            context.User.Add(user);
+            context.SaveChanges();
         }
 
         public void UpdatePassword(string username, string password)
