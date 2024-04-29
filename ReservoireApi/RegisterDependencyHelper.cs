@@ -11,6 +11,7 @@ namespace Reservoire
         public static void RegisterDependencies(this IServiceCollection services)
         {
             services.AddScoped<ILoginService,LoginService>();
+            services.AddScoped<IJwtHelper, JwtHelper>();
             services.AddSingleton<IHashHelper, HashHelper>();
         }
     }

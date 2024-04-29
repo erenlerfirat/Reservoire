@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models
 {
-    public class User
+    public class User : BaseModel
     {
         public int Id { get; set; }
         public int UserRoleId { get; set; }

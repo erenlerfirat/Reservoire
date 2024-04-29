@@ -1,11 +1,6 @@
 ﻿using Business.Abstract;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using Utiliy.Helper;
 using Utiliy.Models;
 
 namespace Reservoire.Controllers
@@ -24,7 +19,12 @@ namespace Reservoire.Controllers
         [HttpPost("Login")]
         public ActionResult<Token> Login([FromBody] LoginRequest request)
         {
-
+            loginService.Login(request);
+            return Ok(request);
+        }
+        [HttpPost("Register")]
+        public ActionResult<Token> Register([FromBody] LoginRequest request)
+        {
             return Ok(request);
         }
     }

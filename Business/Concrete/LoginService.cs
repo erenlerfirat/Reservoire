@@ -1,39 +1,72 @@
 ﻿using Business.Abstract;
+using Domain.Dtos;
 using Domain.Models;
+using Utility.Results;
 using Utiliy.Abstract;
+
 namespace Business.Concrete
 {
     public class LoginService : ILoginService
     {
         private readonly CoreDbContext context;
         private readonly IHashHelper hashHelper;
-        public LoginService(CoreDbContext context, IHashHelper hashHelper)
+        private readonly IJwtHelper jwtHelper;
+        public LoginService(CoreDbContext context, IHashHelper hashHelper , IJwtHelper jwtHelper)
         {
             this.context = context;
             this.hashHelper = hashHelper;
+            this.jwtHelper = jwtHelper;
         }
-        public void Login(string email, string password)
+        public IDataResult<LoginResponse> Login(LoginRequest request)
         {
-            // go check user credentials
-            // create jwt token
+            var response = new LoginResponse();
             
+            var user = context.User.Where(u=> u.Email == request.Email).SingleOrDefault();
+            var role = context.UserRole.Where(u=>u.UserId == user.Id).SingleOrDefault();
 
-            throw new NotImplementedException();
+            bool isPasswordValid = hashHelper.Validate(request.Password, user.PasswordHash);
+            var tokenRequest = new UserTokenRequest 
+            { 
+                Email = request.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserId = user.Id ,
+                RoleType = role.RoleType
+            };
+            string token = jwtHelper.CreateToken(tokenRequest);
+            response.Token = token;
+
+            return new SuccessDataResult<LoginResponse>(response);
         }
 
-        public void Logout(string username)
-        {
-            //
-            throw new NotImplementedException();
-        }
+        public IDataResult<RegisterResponse> Register(RegisterRequest request)
+        {            
+            // check is email unique
 
-        public void Register(string username, string password, string email)
-        {
-            // add user credentials to table
-            string hash = hashHelper.Encrypt(password);
-            User user = new() { Email = email, PasswordHash = hash };
+            string hash = hashHelper.Encrypt(request.Password);
+
+            User user = new() 
+            { 
+                Email = request.Email,
+                PasswordHash = hash ,
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now 
+            };
+            
             context.User.Add(user);
             context.SaveChanges();
+
+            UserRole role = new() 
+            { 
+                UserId = user.Id,
+                RoleType = request.RoleType ,
+                CreatedOn = DateTime.Now ,
+                UpdatedOn = DateTime.Now
+            };
+            context.Add(role);
+            context.SaveChanges();
+
+            return new SuccessDataResult<RegisterResponse>(new RegisterResponse());
         }
 
         public void UpdatePassword(string username, string password)

@@ -1,4 +1,3 @@
-
 using Business.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +33,8 @@ namespace Reservoire
 
             builder.Services.RegisterDependencies();
 
+            #region swagger settings
+
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReservoireAPI", Version = "v1" });
@@ -56,8 +57,9 @@ namespace Reservoire
                     }, Array.Empty<string>()}
                 });
             });
+            #endregion
 
-            var key = Encoding.ASCII.GetBytes(AppSettingsHelper.GetValue("Token", ""));
+
             // Add JWT Authentication Middleware - This code will intercept HTTP request and validate the JWT.
             builder.Services.AddAuthentication(options =>
             {
@@ -71,7 +73,7 @@ namespace Reservoire
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    IssuerSigningKey = SymmetricKeyHelper.GetSymmetricKey(),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };

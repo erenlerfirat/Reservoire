@@ -8,7 +8,7 @@ namespace Utiliy.Helper
         private const int _saltSize = 16; // 128 bits
         private const int _keySize = 32; // 256 bits
         private const int _iterations = 50000;
-        private static readonly HashAlgorithmName _algorithm = HashAlgorithmName.SHA256;
+        private static readonly HashAlgorithmName _algorithm = HashAlgorithmName.SHA512;
 
         private const char segmentDelimiter = ':';
 
