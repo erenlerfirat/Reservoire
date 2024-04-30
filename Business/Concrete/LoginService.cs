@@ -47,23 +47,30 @@ namespace Business.Concrete
 
             User user = new() 
             { 
+                FirstName = request.FirstName,
+                LastName= request.LastName,
+                Phone = request.Phone,
                 Email = request.Email,
-                PasswordHash = hash ,
+                PasswordHash = hash,
+                FailedTryCount = 0,
                 CreatedOn = DateTime.Now,
                 UpdatedOn = DateTime.Now 
             };
             
             context.User.Add(user);
-            context.SaveChanges();
 
             UserRole role = new() 
             { 
                 UserId = user.Id,
-                RoleType = request.RoleType ,
-                CreatedOn = DateTime.Now ,
+                RoleType = request.RoleType,
+                CreatedOn = DateTime.Now,
                 UpdatedOn = DateTime.Now
             };
+
             context.Add(role);
+
+            user.UserRoleId = role.Id;
+
             context.SaveChanges();
 
             return new SuccessDataResult<RegisterResponse>(new RegisterResponse());

@@ -27,5 +27,11 @@ namespace Reservoire.Controllers
         {
             return Ok(request);
         }
+
+        [HttpGet("Test")]
+        public ActionResult<string> Test()
+        {
+            return Ok("Slavek");
+        }
     }
 }

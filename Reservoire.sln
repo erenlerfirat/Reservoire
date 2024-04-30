@@ -11,6 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{28388464-7A52-463B-8B0F-82B0E559CFE4}"
 	ProjectSection(SolutionItems) = preProject
+		dockerfile.txt = dockerfile.txt
 		Notes.txt = Notes.txt
 	EndProjectSection
 EndProject
