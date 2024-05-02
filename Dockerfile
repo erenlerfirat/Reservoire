@@ -1,8 +1,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-WORKDIR /App
 
+WORKDIR /App
+EXPOSE 7070
 # Copy everything
-COPY . ./
+COPY . /App
 # Restore as distinct layers
 RUN dotnet restore
 # Build and publish a release
@@ -13,6 +14,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /App
 COPY --from=build-env /App/out .
 
+ENV ASPNETCORE_URLS http://*:7070
+
 ENTRYPOINT ["dotnet", "ReservoireApi.dll"]
 
 # dotnet run --project ./ReservoireApi/ReservoireApi.csproj
@@ -21,6 +24,8 @@ ENTRYPOINT ["dotnet", "ReservoireApi.dll"]
 
 #    docker images
 
-#    docker run --name firat -p 8080:8080 -it b330845f71cb  ImageId
+#    docker run --rm --name firat -p 4000:7070 -it 333eec5abc1f  ImageId
 
-#    curl  http://localhost:8080/api/login/Test
+#    curl  http://localhost:4000/api/login/Test
+
+#    docker rmi ImageId
