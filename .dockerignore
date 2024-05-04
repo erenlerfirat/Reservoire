@@ -6,3 +6,6 @@
 # files
 Dockerfile*
 **/*.md
+*.dockerignore
+docker-compose*
+Notes.txt
