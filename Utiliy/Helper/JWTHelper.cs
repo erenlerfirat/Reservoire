@@ -34,7 +34,7 @@ namespace Utiliy.Helper
             return tokenHandler.WriteToken(token);
         }
 
-        public ClaimsPrincipal DecodeToken(string token)
+        public UserDetailsDto GetUserDetails(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -47,30 +47,27 @@ namespace Utiliy.Helper
                 ClockSkew = TimeSpan.Zero
             };
 
-            try
-            {
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
-                return principal;
-            }
-            catch (SecurityTokenExpiredException)
-            {
-                // Token has expired
-                return null;
-            }
-            catch (SecurityTokenInvalidSignatureException)
-            {
-                // Invalid token signature
-                return null;
-            }
-            catch (Exception)
-            {
-                // Other token validation errors
-                return null;
-            }
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+            var userDetails = ToUserDetails(principal);
+            return userDetails;
+            
         }
-        public IEnumerable<Claim> GetClaims()
+        private static UserDetailsDto ToUserDetails(ClaimsPrincipal principal) 
         {
-            throw new NotImplementedException();
+            var id = Convert.ToInt32(principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            var firstname = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var lastname = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
+            var roleType = Convert.ToInt16(principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value);
+            var email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            return new UserDetailsDto
+            {
+                Id = id,
+                Email = email ?? "",
+                RoleType = roleType,
+                FirstName = firstname ?? "",
+                LastName = lastname ?? ""
+            };
         }
 
     }

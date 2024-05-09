@@ -32,3 +32,5 @@ ENTRYPOINT ["dotnet", "ReservoireApi.dll"]
 #    curl  http://localhost:4000/api/login/Test
 
 #    docker rmi ImageId
+
+#    open wsl-2 system win prompt => code --remote wsl+Ubuntu /mnt/c/Users/Onur/source/repos/Reservoire

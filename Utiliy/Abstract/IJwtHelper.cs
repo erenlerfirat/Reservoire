@@ -6,6 +6,6 @@ namespace Utiliy.Abstract
     public interface IJwtHelper
     {
         string CreateToken(UserTokenRequest request, int expirationMinutes = 10080);
-        ClaimsPrincipal DecodeToken(string token);
+        UserDetailsDto GetUserDetails(string token);
     }
 }

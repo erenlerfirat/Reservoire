@@ -4,14 +4,8 @@
     {
         public LoginResponse()
         {
-            this.Token = string.Empty;
-            this.ResponseMsg =
-            new HttpResponseMessage()
-            {
-                StatusCode = System.Net.HttpStatusCode.Unauthorized
-            };
+            Token = string.Empty;
         }
         public string Token { get; set; }
-        public HttpResponseMessage ResponseMsg { get; set; }
     }
 }

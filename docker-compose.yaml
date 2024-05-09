@@ -1,11 +1,12 @@
-  version : 3.8
-  services :
-    mongodb:
-      image: 'mongo'
-      volumes:
-        - data:/data/db
-      
+version : 3.8
+services :
+  mongodb:
+    image: 'mongo'
+    volumes:
+     - data:/data/db
+
     frontend:
       
     backend:
+
       

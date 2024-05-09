@@ -8,7 +8,6 @@ CREATE TABLE [app].[User] (
 	Email varchar(50),
 	PasswordHash varchar(250),
 	Phone varchar(50),
-	UserRoleId int ,
 	FailedTryCount smallint,
 	CreatedOn DateTime,
 	UpdatedOn DateTime

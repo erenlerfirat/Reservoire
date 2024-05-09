@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
 using Domain.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Utility.Results;
 using Utiliy.Models;
 
 namespace Reservoire.Controllers
@@ -17,17 +19,22 @@ namespace Reservoire.Controllers
             this.configuration = configuration;
         }
         [HttpPost("Login")]
-        public ActionResult<Token> Login([FromBody] LoginRequest request)
+        public IDataResult<LoginResponse> Login([FromBody] LoginRequest request)
         {
-            loginService.Login(request);
-            return Ok(request);
+            var result = loginService.Login(request);
+            return result.Success
+                   ? new SuccessDataResult<LoginResponse>(result.Data)
+                   : new ErrorDataResult<LoginResponse>();
         }
         [HttpPost("Register")]
-        public ActionResult<Token> Register([FromBody] LoginRequest request)
+        public IDataResult<RegisterResponse> Register([FromBody] RegisterRequest request)
         {
-            return Ok(request);
+            var result = loginService.Register(request);
+            return result.Success
+                   ? new SuccessDataResult<RegisterResponse>()
+                   : new ErrorDataResult<RegisterResponse>(result.Data);
         }
-
+        [Authorize]
         [HttpGet("Test")]
         public ActionResult<string> Test()
         {

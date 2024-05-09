@@ -17,6 +17,13 @@ namespace Business.Concrete
             this.hashHelper = hashHelper;
             this.jwtHelper = jwtHelper;
         }
+
+        public IDataResult<UserDetailsDto> GetUserDetails(string token)
+        {
+            var result = jwtHelper.GetUserDetails(token);
+            return new SuccessDataResult<UserDetailsDto>(result);
+        }
+
         public IDataResult<LoginResponse> Login(LoginRequest request)
         {
             var response = new LoginResponse();
@@ -35,48 +42,57 @@ namespace Business.Concrete
             };
             string token = jwtHelper.CreateToken(tokenRequest);
             response.Token = token;
-
-            return new SuccessDataResult<LoginResponse>(response);
+            var x = new SuccessDataResult<LoginResponse>(response,"Success");
+            return x;
         }
 
         public IDataResult<RegisterResponse> Register(RegisterRequest request)
-        {            
+        {
             // check is email unique
+            var transaction = context.Database.BeginTransaction();
+            try
+            {
+                string hash = hashHelper.Encrypt(request.Password);
+                
+                User user = new()
+                {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Phone = request.Phone,
+                    Email = request.Email,
+                    PasswordHash = hash,
+                    FailedTryCount = 0,
+                    CreatedOn = DateTime.Now,
+                    UpdatedOn = DateTime.Now
+                };
 
-            string hash = hashHelper.Encrypt(request.Password);
+                context.User.Add(user);
+                context.SaveChanges();
 
-            User user = new() 
-            { 
-                FirstName = request.FirstName,
-                LastName= request.LastName,
-                Phone = request.Phone,
-                Email = request.Email,
-                PasswordHash = hash,
-                FailedTryCount = 0,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now 
-            };
+                UserRole role = new()
+                {
+                    UserId = user.Id,
+                    RoleType = request.RoleType,
+                    CreatedOn = DateTime.Now,
+                    UpdatedOn = DateTime.Now
+                };
+
+                context.Add(role);
+
+                context.SaveChanges();
+                transaction.Commit();
+
+                return new SuccessDataResult<RegisterResponse>(new RegisterResponse());
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return new ErrorDataResult<RegisterResponse>(ex.Message);
+            }
             
-            context.User.Add(user);
-
-            UserRole role = new() 
-            { 
-                UserId = user.Id,
-                RoleType = request.RoleType,
-                CreatedOn = DateTime.Now,
-                UpdatedOn = DateTime.Now
-            };
-
-            context.Add(role);
-
-            user.UserRoleId = role.Id;
-
-            context.SaveChanges();
-
-            return new SuccessDataResult<RegisterResponse>(new RegisterResponse());
         }
 
-        public void UpdatePassword(string username, string password)
+        public IDataResult<bool> UpdatePassword(string username, string password)
         {
             // check jwt and update user password
             throw new NotImplementedException();
