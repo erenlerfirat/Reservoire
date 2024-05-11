@@ -28,10 +28,17 @@ namespace Business.Concrete
         {
             var response = new LoginResponse();
             
-            var user = context.User.Where(u=> u.Email == request.Email).SingleOrDefault();
-            var role = context.UserRole.Where(u=>u.UserId == user.Id).SingleOrDefault();
+            var user = context.User.Where(u => u.Email == request.Email).FirstOrDefault();
 
             bool isPasswordValid = hashHelper.Validate(request.Password, user.PasswordHash);
+
+            if (!isPasswordValid)
+            {
+                return new ErrorDataResult<LoginResponse>("Password is false");
+            }
+
+            var role = context.UserRole.Where(u => u.UserId == user.Id).FirstOrDefault();
+            
             var tokenRequest = new UserTokenRequest 
             { 
                 Email = request.Email,
@@ -40,16 +47,19 @@ namespace Business.Concrete
                 UserId = user.Id ,
                 RoleType = role.RoleType
             };
-            string token = jwtHelper.CreateToken(tokenRequest);
-            response.Token = token;
-            var x = new SuccessDataResult<LoginResponse>(response,"Success");
-            return x;
+            response.Token = jwtHelper.CreateToken(tokenRequest);            
+            return new SuccessDataResult<LoginResponse>(response, "Success");
         }
 
         public IDataResult<RegisterResponse> Register(RegisterRequest request)
         {
-            // check is email unique
+            bool isPhoneOrEmailPicked = context.User.Any(x => x.Email == request.Email || x.Phone == request.Phone);
+
+            if (isPhoneOrEmailPicked)            
+                return new ErrorDataResult<RegisterResponse>("Email or phone already picked up");
+
             var transaction = context.Database.BeginTransaction();
+
             try
             {
                 string hash = hashHelper.Encrypt(request.Password);

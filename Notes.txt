@@ -1,4 +1,5 @@
-1) Login methods register update delete password
-2) Register dependency in program.cs
-3) EntityFramework context inject via ctors not repository pattern
-4) Write faster code
+- FluentValidation
+- UpdatePassword set up
+- ReservationService
+- PaymentService
+- UserService
