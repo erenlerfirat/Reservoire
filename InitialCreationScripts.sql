@@ -2,35 +2,49 @@
 GO
 
 CREATE TABLE [app].[User] (
-    Id int NOT NULL  PRIMARY KEY IDENTITY(1,1),	
-	FirstName varchar(50) NOT NULL,
-    LastName varchar(50) NOT NULL,
-	Email varchar(50),
+    Id Int NOT NULL  PRIMARY KEY IDENTITY(1,1),	
+	FirstName varchar(100) NOT NULL,
+    LastName varchar(100) NOT NULL,
+	Email varchar(100),
 	PasswordHash varchar(250),
 	Phone varchar(50),
-	FailedTryCount smallint,
+	FailedTryCount SmallInt,
 	CreatedOn DateTime,
-	UpdatedOn DateTime
+	UpdatedOn DateTime,
+	IsDeleted Bit
 );
-GO
 
 CREATE TABLE [app].[UserRole] (
-    Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
-    RoleType smallint NOT NULL ,
-    UserId int NOT NULL,
+    Id Int NOT NULL PRIMARY KEY IDENTITY(1,1),
+    RoleType SmallInt NOT NULL ,
+    UserId Int NOT NULL,
 	CreatedOn DateTime,
-	UpdatedOn DateTime
+	UpdatedOn DateTime,
+	IsDeleted Bit
 );
 
 CREATE TABLE [app].[UserAddress] (
-    Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
-    UserId int NOT NULL,
+    Id Int NOT NULL PRIMARY KEY IDENTITY(1,1),
+    UserId Int NOT NULL,
 	Description nvarchar(250),
 	Country varchar(50),
 	City varchar(50),
 	District varchar(50),
 	Street varchar(50),
-	PostalCode smallint,
+	PostalCode Int,
 	CreatedOn DateTime,
-	UpdatedOn DateTime
+	UpdatedOn DateTime,
+	IsDeleted Bit
+);
+
+CREATE TABLE [app].[Reservation] (
+    Id Int NOT NULL PRIMARY KEY IDENTITY(1,1),
+    UserId Int NOT NULL,
+	BusinessOwnerUserId Int NOT NULL,
+	Description nvarchar(250),
+	Status SmallInt,
+	ReservationDate DateTime,
+	CreatedOn DateTime,
+	UpdatedOn DateTime,
+	IsDeleted Bit
 );
