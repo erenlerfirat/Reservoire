@@ -7,15 +7,32 @@ namespace ReservoireApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class LoginController : ControllerBase
+    public class ReservationController : ControllerBase
     {
-        public LoginController()
+        public ReservationController()
         {
                 
         }
 
         [HttpGet("Get")]
         public ActionResult<string> Get(int id)
+        {
+            return Ok("Your Reservation");
+        }
+
+        [HttpGet("Book")]
+        public ActionResult<string> Book(int id)
+        {
+            return Ok("Your Reservation");
+        }
+
+        [HttpGet("Edit")]
+        public ActionResult<string> Update(int id)
+        {
+            return Ok("Your Reservation");
+        }
+        [HttpGet("Cancel")]
+        public ActionResult<string> Cancel(int id)
         {
             return Ok("Your Reservation");
         }

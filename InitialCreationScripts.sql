@@ -11,7 +11,7 @@ CREATE TABLE [app].[User] (
 	FailedTryCount SmallInt,
 	CreatedOn DateTime,
 	UpdatedOn DateTime,
-	IsDeleted Bit
+	IsDeleted Bit NOT NULL
 );
 
 CREATE TABLE [app].[UserRole] (
@@ -20,7 +20,7 @@ CREATE TABLE [app].[UserRole] (
     UserId Int NOT NULL,
 	CreatedOn DateTime,
 	UpdatedOn DateTime,
-	IsDeleted Bit
+	IsDeleted Bit NOT NULL
 );
 
 CREATE TABLE [app].[UserAddress] (
@@ -34,7 +34,7 @@ CREATE TABLE [app].[UserAddress] (
 	PostalCode Int,
 	CreatedOn DateTime,
 	UpdatedOn DateTime,
-	IsDeleted Bit
+	IsDeleted Bit NOT NULL
 );
 
 CREATE TABLE [app].[Reservation] (
@@ -46,5 +46,5 @@ CREATE TABLE [app].[Reservation] (
 	ReservationDate DateTime,
 	CreatedOn DateTime,
 	UpdatedOn DateTime,
-	IsDeleted Bit
+	IsDeleted Bit NOT NULL
 );

@@ -6,12 +6,12 @@ using Utiliy.Abstract;
 
 namespace Business.Concrete
 {
-    public class LoginService : ILoginService
+    public class AuthService : IAuthService
     {
         private readonly CoreDbContext context;
         private readonly IHashHelper hashHelper;
         private readonly IJwtHelper jwtHelper;
-        public LoginService(CoreDbContext context, IHashHelper hashHelper , IJwtHelper jwtHelper)
+        public AuthService(CoreDbContext context, IHashHelper hashHelper , IJwtHelper jwtHelper)
         {
             this.context = context;
             this.hashHelper = hashHelper;
@@ -30,6 +30,9 @@ namespace Business.Concrete
             
             var user = context.User.Where(u => u.Email == request.Email).FirstOrDefault();
 
+            if (user is null)            
+                return new ErrorDataResult<LoginResponse>("User not found");
+            
             bool isPasswordValid = hashHelper.Validate(request.Password, user.PasswordHash);
 
             if (!isPasswordValid)
@@ -38,7 +41,10 @@ namespace Business.Concrete
             }
 
             var role = context.UserRole.Where(u => u.UserId == user.Id).FirstOrDefault();
-            
+
+            if (role is null)
+                return new ErrorDataResult<LoginResponse>("User role not found");
+
             var tokenRequest = new UserTokenRequest 
             { 
                 Email = request.Email,

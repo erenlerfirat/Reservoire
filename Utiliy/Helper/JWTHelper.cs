@@ -36,6 +36,8 @@ namespace Utiliy.Helper
 
         public UserDetailsDto GetUserDetails(string token)
         {
+            token = token.Split(" ")[1]; // Cut Bearer prefix
+
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var validationParameters = new TokenValidationParameters

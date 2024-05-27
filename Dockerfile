@@ -1,17 +1,18 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy AS build-env
 
 WORKDIR /App
 
 EXPOSE 7070
 # Copy everything
 COPY . /App
+
 # Restore as distinct layers
 RUN dotnet restore
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
 
 WORKDIR /App
 
@@ -23,11 +24,11 @@ ENTRYPOINT ["dotnet", "ReservoireApi.dll"]
 
 # dotnet run --project ./ReservoireApi/ReservoireApi.csproj
 
-#    docker build -t reservoire:v1 .
+#    docker build -t reservoire:v1 . --no-cache 
 
 #    docker images
 
-#    docker run --rm --name firat -p 4000:7070 -it 333eec5abc1f  ImageId
+#    docker run --rm --name firat -p 4000:7070 -it reservoire:v1   ImageId
 
 #    curl  http://localhost:4000/api/login/Test
 

@@ -3,7 +3,7 @@ using Utility.Results;
 
 namespace Business.Abstract
 {
-    public interface ILoginService
+    public interface IAuthService
     {
         public IDataResult<LoginResponse> Login(LoginRequest request);        
         public IDataResult<RegisterResponse> Register(RegisterRequest request);
