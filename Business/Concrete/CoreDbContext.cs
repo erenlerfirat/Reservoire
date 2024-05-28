@@ -5,6 +5,10 @@ namespace Business.Concrete
 {
     public class CoreDbContext : DbContext
     {
+        public CoreDbContext()
+        {
+                
+        }
         public CoreDbContext(DbContextOptions<CoreDbContext> options)
         : base(options)
         {
@@ -24,9 +28,9 @@ namespace Business.Concrete
                 }
             }
         }
-        public DbSet<User> User { get; set; }
-        public DbSet<UserRole> UserRole { get; set; }
-        public DbSet<Reservation> Reservation { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<UserRole> UserRole { get; set; }
+        public virtual DbSet<Reservation> Reservation { get; set; }
 
     }
 }

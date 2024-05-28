@@ -2,9 +2,7 @@
 using Domain.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 using Utility.Results;
-using Utiliy.Models;
 
 namespace Reservoire.Controllers
 {
@@ -39,23 +37,6 @@ namespace Reservoire.Controllers
         [HttpGet("Test")]
         public async Task<ActionResult<string>> Test(CancellationToken cancellationToken)
         {
-            try
-            {
-
-                for (int i = 0; i < 100; i++)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    await Task.Delay(200);
-                    Console.WriteLine($"{i}");
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.ToString());
-            }
-            
-
             return Ok("Slavek");
         }
 

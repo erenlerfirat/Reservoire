@@ -17,12 +17,21 @@ namespace Business.Concrete
 
         public async Task<IDataResult<Reservation>> GetAsync(int id) 
         {
-            var reservation = await context.Reservation.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-            if (reservation is null)            
-                return new ErrorDataResult<Reservation>(Messages.NotFound);
             
-                return new SuccessDataResult<Reservation>(reservation,Messages.Success);
+            try
+            {
+                var reservation = await context.Reservation.Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (reservation is null)
+                    return new ErrorDataResult<Reservation>(Messages.NotFound);
+
+                return new SuccessDataResult<Reservation>(reservation, Messages.Success);
+            }
+            catch (Exception ex )
+            {
+
+                throw;
+            }
+            
         }
         public async Task<IResult> BookAsync(ReservationRequest request)
         {
