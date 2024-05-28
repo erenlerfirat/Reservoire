@@ -5,9 +5,9 @@ namespace Business.Abstract
 {
     public interface IAuthService
     {
-        public IDataResult<LoginResponse> Login(LoginRequest request);        
-        public IDataResult<RegisterResponse> Register(RegisterRequest request);
-        public IDataResult<bool> UpdatePassword(string username, string password);
+        public Task<IDataResult<LoginResponse>> LoginAsync(LoginRequest request);        
+        public Task<IDataResult<RegisterResponse>> RegisterAsync(RegisterRequest request);
+        public Task<IDataResult<bool>> UpdatePasswordAsync(string username, string password);
         public IDataResult<UserDetailsDto> GetUserDetails(string token);
     }
 }

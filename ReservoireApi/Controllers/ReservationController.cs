@@ -27,7 +27,7 @@ namespace ReservoireApi.Controllers
         }
 
         [HttpGet("Edit")]
-        public ActionResult<string> Update(int id)
+        public ActionResult<string> Edit(int id)
         {
             return Ok("Your Reservation");
         }

@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Business.Abstract;
+﻿using Business.Abstract;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +18,17 @@ namespace Reservoire.Controllers
         }
 
         [HttpPost("Login")]
-        public IDataResult<LoginResponse> Login([FromBody] LoginRequest request)
+        public async Task<IDataResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
-            var result = loginService.Login(request);
+            var result = await loginService.LoginAsync(request);
             return result.Success
                    ? new SuccessDataResult<LoginResponse>(result.Data,result.Message)
                    : new ErrorDataResult<LoginResponse>(result.Message);
         }
         [HttpPost("Register")]
-        public IDataResult<RegisterResponse> Register([FromBody] RegisterRequest request)
+        public async Task<IDataResult<RegisterResponse>> Register([FromBody] RegisterRequest request)
         {
-            var result = loginService.Register(request);
+            var result = await loginService.RegisterAsync(request);
             return result.Success
                    ? new SuccessDataResult<RegisterResponse>(result.Message)
                    : new ErrorDataResult<RegisterResponse>(result.Message);

@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Domain.Dtos;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Utility.Results;
 using Utiliy.Abstract;
 
@@ -24,11 +25,11 @@ namespace Business.Concrete
             return new SuccessDataResult<UserDetailsDto>(result);
         }
 
-        public IDataResult<LoginResponse> Login(LoginRequest request)
+        public async Task<IDataResult<LoginResponse>> LoginAsync(LoginRequest request)
         {
             var response = new LoginResponse();
             
-            var user = context.User.Where(u => u.Email == request.Email).FirstOrDefault();
+            var user = await context.User.Where(u => u.Email == request.Email).FirstOrDefaultAsync();
 
             if (user is null)            
                 return new ErrorDataResult<LoginResponse>("User not found");
@@ -40,7 +41,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<LoginResponse>("Password is false");
             }
 
-            var role = context.UserRole.Where(u => u.UserId == user.Id).FirstOrDefault();
+            var role = await context.UserRole.Where(u => u.UserId == user.Id).FirstOrDefaultAsync();
 
             if (role is null)
                 return new ErrorDataResult<LoginResponse>("User role not found");
@@ -57,14 +58,14 @@ namespace Business.Concrete
             return new SuccessDataResult<LoginResponse>(response, "Success");
         }
 
-        public IDataResult<RegisterResponse> Register(RegisterRequest request)
+        public async Task<IDataResult<RegisterResponse>> RegisterAsync(RegisterRequest request)
         {
-            bool isPhoneOrEmailPicked = context.User.Any(x => x.Email == request.Email || x.Phone == request.Phone);
+            bool isPhoneOrEmailPicked = await context.User.AnyAsync(x => x.Email == request.Email || x.Phone == request.Phone);
 
             if (isPhoneOrEmailPicked)            
                 return new ErrorDataResult<RegisterResponse>("Email or phone already picked up");
 
-            var transaction = context.Database.BeginTransaction();
+            var transaction = await context.Database.BeginTransactionAsync();
 
             try
             {
@@ -82,8 +83,8 @@ namespace Business.Concrete
                     UpdatedOn = DateTime.Now
                 };
 
-                context.User.Add(user);
-                context.SaveChanges();
+                await context.User.AddAsync(user);
+                await context.SaveChangesAsync();
 
                 UserRole role = new()
                 {
@@ -93,22 +94,22 @@ namespace Business.Concrete
                     UpdatedOn = DateTime.Now
                 };
 
-                context.Add(role);
+                await context.AddAsync(role);
 
-                context.SaveChanges();
-                transaction.Commit();
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
 
                 return new SuccessDataResult<RegisterResponse>(new RegisterResponse());
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
+                await transaction.RollbackAsync();
                 return new ErrorDataResult<RegisterResponse>(ex.Message);
             }
             
         }
 
-        public IDataResult<bool> UpdatePassword(string username, string password)
+        public Task<IDataResult<bool>> UpdatePasswordAsync(string username, string password)
         {
             // check jwt and update user password
             throw new NotImplementedException();

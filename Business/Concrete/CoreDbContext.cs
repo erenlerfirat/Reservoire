@@ -26,6 +26,7 @@ namespace Business.Concrete
         }
         public DbSet<User> User { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Reservation> Reservation { get; set; }
 
     }
 }

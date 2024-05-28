@@ -4,7 +4,7 @@
     {
         public const string Success = "Success";
         public const string Error = "Error";
-
+        public const string NotFound = "Record Not Found";
         #region User Authentication
         public const string AuthorizationDenied = "Authorization Denied !";
 

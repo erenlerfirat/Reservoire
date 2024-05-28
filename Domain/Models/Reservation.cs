@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
 {
+    [Table("Reservation", Schema = "app")]
     public class Reservation : BaseModel
     {
         public int Id { get; set; }
