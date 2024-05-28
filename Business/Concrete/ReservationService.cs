@@ -26,6 +26,14 @@ namespace Business.Concrete
         }
         public async Task<IResult> BookAsync(ReservationRequest request)
         {
+            var checkReservation = await context.Reservation.Where(x => 
+                                                             x.UserId == request.UserId && 
+                                                             x.BusinessOwnerUserId == request.BusinessOwnerUserId && 
+                                                             x.ReservationDate == request.ReservationDate)
+                                                             .AnyAsync();
+            if (checkReservation)            
+                return new ErrorResult(Messages.ReservedAlready);
+            
             var reservation = new Reservation 
             { 
                 CreatedOn = DateTime.Now,

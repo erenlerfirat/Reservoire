@@ -63,9 +63,12 @@ namespace Reservoire
             #region Dependencies
 
             services.AddDbContext<CoreDbContext>(options => options.UseSqlServer(AppSettingsHelper.GetValue("ConnectionString", "")));
-            services.AddScoped<IAuthService, AuthService>();
+            
             services.AddScoped<IJwtHelper, JwtHelper>();
             services.AddSingleton<IHashHelper, HashHelper>();
+
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IReservationService, ReservationService>();
 
             #endregion
         }

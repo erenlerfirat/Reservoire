@@ -25,7 +25,7 @@ namespace Business.Concrete
             return new SuccessDataResult<UserDetailsDto>(result);
         }
 
-        public async Task<IDataResult<LoginResponse>> LoginAsync(LoginRequest request)
+        public async Task<IDataResult<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
         {
             var response = new LoginResponse();
             
@@ -58,8 +58,11 @@ namespace Business.Concrete
             return new SuccessDataResult<LoginResponse>(response, "Success");
         }
 
-        public async Task<IDataResult<RegisterResponse>> RegisterAsync(RegisterRequest request)
+        public async Task<IDataResult<RegisterResponse>> RegisterAsync(RegisterRequest request , CancellationToken cancellationToken)
         {
+            
+            cancellationToken.ThrowIfCancellationRequested();
+            
             bool isPhoneOrEmailPicked = await context.User.AnyAsync(x => x.Email == request.Email || x.Phone == request.Phone);
 
             if (isPhoneOrEmailPicked)            
@@ -67,6 +70,7 @@ namespace Business.Concrete
 
             var transaction = await context.Database.BeginTransactionAsync();
 
+            await Task.Delay(5000);
             try
             {
                 string hash = hashHelper.Encrypt(request.Password);
@@ -109,7 +113,7 @@ namespace Business.Concrete
             
         }
 
-        public Task<IDataResult<bool>> UpdatePasswordAsync(string username, string password)
+        public Task<IDataResult<bool>> UpdatePasswordAsync(string username, string password , CancellationToken cancellationToken)
         {
             // check jwt and update user password
             throw new NotImplementedException();
