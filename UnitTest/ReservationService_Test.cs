@@ -9,12 +9,6 @@ namespace UnitTest.Concrete
     public class ReservationService_Test
     {
 
-        private readonly CoreDbContext context = FakeDbContextFactory.Create();
-        private IReservationService GetService()
-        {
-            return new ReservationService(FakeDbContextFactory.Create());
-        }
-
         [Fact]
         public async Task GetAsync_ReturnsTrue()
         {
