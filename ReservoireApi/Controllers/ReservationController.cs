@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Business.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ReservoireApi.Controllers
@@ -9,9 +10,10 @@ namespace ReservoireApi.Controllers
     [Route("api/[controller]")]
     public class ReservationController : ControllerBase
     {
-        public ReservationController()
+        private readonly IReservationService reservationService;
+        public ReservationController(IReservationService reservationService)
         {
-                
+            this.reservationService = reservationService;
         }
 
         [HttpGet("Get")]

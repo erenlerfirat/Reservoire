@@ -36,7 +36,7 @@ namespace Reservoire.Controllers
         
         [HttpGet("Test")]
         public async Task<ActionResult<string>> Test(CancellationToken cancellationToken)
-        {
+        {            
             return Ok("Slavek");
         }
 

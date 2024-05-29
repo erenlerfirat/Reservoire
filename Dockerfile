@@ -7,14 +7,14 @@ EXPOSE 8080
 
 COPY . /app
 RUN dotnet restore
-RUN dotnet publish -c Release -o out --no-build
+RUN dotnet publish -c Release 
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
 WORKDIR /app
 # ENV ASPNETCORE_ENVIRONMENT=Development
 # ENV ASPNETCORE_URLS=http://*:5000
 
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/ReservoireApi/bin/Release/net8.0/publish .
 
 ENTRYPOINT ["dotnet", "ReservoireApi.dll"]
 

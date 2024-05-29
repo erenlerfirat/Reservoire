@@ -2,8 +2,10 @@
 using Domain.Dtos;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using Utility.Results;
 using Utiliy.Abstract;
+using Utiliy.Messages;
 
 namespace Business.Concrete
 {
@@ -28,9 +30,9 @@ namespace Business.Concrete
         public async Task<IDataResult<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
         {
             var response = new LoginResponse();
-            
+            var transaction = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
             var user = await context.User.Where(u => u.Email == request.Email).FirstOrDefaultAsync();
-
+            
             if (user is null)            
                 return new ErrorDataResult<LoginResponse>("User not found");
             
@@ -54,7 +56,8 @@ namespace Business.Concrete
                 UserId = user.Id ,
                 RoleType = role.RoleType
             };
-            response.Token = jwtHelper.CreateToken(tokenRequest);            
+            response.Token = jwtHelper.CreateToken(tokenRequest);
+            await transaction.CommitAsync();
             return new SuccessDataResult<LoginResponse>(response, "Success");
         }
 
@@ -62,15 +65,14 @@ namespace Business.Concrete
         {
             
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             bool isPhoneOrEmailPicked = await context.User.AnyAsync(x => x.Email == request.Email || x.Phone == request.Phone);
 
             if (isPhoneOrEmailPicked)            
                 return new ErrorDataResult<RegisterResponse>("Email or phone already picked up");
 
-            var transaction = await context.Database.BeginTransactionAsync();
-
-            await Task.Delay(5000);
+            var transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable,cancellationToken);
+            
             try
             {
                 string hash = hashHelper.Encrypt(request.Password);
@@ -103,7 +105,7 @@ namespace Business.Concrete
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return new SuccessDataResult<RegisterResponse>(new RegisterResponse());
+                return new SuccessDataResult<RegisterResponse>(new RegisterResponse(),Messages.Success);
             }
             catch (Exception ex)
             {
