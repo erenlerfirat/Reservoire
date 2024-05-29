@@ -1,10 +1,8 @@
 using Business.Abstract;
 using Business.Concrete;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
-using NSubstitute;
-using MockQueryable.Core;
 using MockQueryable.NSubstitute;
+using NSubstitute;
 
 namespace UnitTest.Concrete
 {
@@ -20,33 +18,10 @@ namespace UnitTest.Concrete
         [Fact]
         public async Task GetAsync_ReturnsTrue()
         {
-            var service = new ReservationService(FakeDbContextFactory.Create());
-
-            var result = await service.GetAsync(1);
-
-            Assert.True(result.Success);
-        }
-        [Fact]
-        public void TestSubtraction()
-        {
             // Arrange
-            int a = 5;
-            int b = 3;
+            var ctx = FakeDbContextFactory.Create();
 
-            // Act
-            int result = a - b;
-
-            // Assert
-            Assert.Equal(2, result);
-        }
-    }
-    public static class FakeDbContextFactory
-    {
-        public static CoreDbContext Create()
-        {
-            var context = Substitute.For<CoreDbContext>();
-
-            var users = new List<Reservation>
+            var reservation = new List<Reservation>
             {
                 new Reservation()
                     {
@@ -59,8 +34,21 @@ namespace UnitTest.Concrete
             }.AsQueryable()
             .BuildMockDbSet();
 
-            context.Reservation.Returns(users);
+            ctx.Reservation.Returns(reservation);
+            var service = new ReservationService(ctx);
 
+            // Act
+            var result = await service.GetAsync(id:1);
+
+            // Assert
+            Assert.True(result.Success);
+        }
+    }
+    public static class FakeDbContextFactory
+    {
+        public static CoreDbContext Create()
+        {
+            var context = Substitute.For<CoreDbContext>();
             return context;
         }
     }
