@@ -15,6 +15,13 @@ namespace Business.Concrete
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                        .HasOne(x => x.UserAddress)
+                        .WithOne()
+                        .HasForeignKey<UserAddress>(x => x.UserId);
+                        //.Navigation(x => x.UserAddress)
+                        //.UsePropertyAccessMode(PropertyAccessMode.Property);
+
             base.OnModelCreating(modelBuilder);
             foreach (var entidade in modelBuilder.Model.GetEntityTypes())
             {

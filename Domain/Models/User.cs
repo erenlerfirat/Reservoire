@@ -12,5 +12,6 @@ namespace Domain.Models
         public string PasswordHash { get; set; }
         public string Phone { get; set; }
         public short FailedTryCount { get; set; }
+        public UserAddress? UserAddress { get; set; }
     }
 }

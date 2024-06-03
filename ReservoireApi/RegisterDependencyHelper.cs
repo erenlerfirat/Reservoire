@@ -70,6 +70,7 @@ namespace Reservoire
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IReservationService, ReservationService>();
 
+            services.AddScoped<IUserService, UserService>();
             #endregion
         }
     }
