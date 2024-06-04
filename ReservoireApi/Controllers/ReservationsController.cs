@@ -8,32 +8,37 @@ namespace ReservoireApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class ReservationController : ControllerBase
+    public class ReservationsController : ControllerBase
     {
         private readonly IReservationService reservationService;
-        public ReservationController(IReservationService reservationService)
+        public ReservationsController(IReservationService reservationService)
         {
             this.reservationService = reservationService;
         }
 
-        [HttpGet("Get")]
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult<string> Get(int id)
         {
             return Ok("Your Reservation");
         }
 
-        [HttpGet("Book")]
+        [HttpPost]
+        [Route("{id}")]
         public ActionResult<string> Book(int id)
         {
             return Ok("Your Reservation");
         }
 
-        [HttpGet("Edit")]
+        [HttpPut]
+        [Route("{id}")]
         public ActionResult<string> Edit(int id)
         {
             return Ok("Your Reservation");
         }
-        [HttpGet("Cancel")]
+
+        [HttpDelete]
+        [Route("{id}")]
         public ActionResult<string> Cancel(int id)
         {
             return Ok("Your Reservation");
