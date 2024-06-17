@@ -7,8 +7,8 @@ namespace Business.ValidationRules
     {
         public LoginValidator()
         {
-            RuleFor(x => x.Email).NotNull();
-            RuleFor(x => x.Password).NotEmpty();
+            RuleFor(x => x.Email).NotNull().NotEmpty();
+            RuleFor(x => x.Password).NotNull().NotEmpty();
         }
     }
     public class RegisterValidator : AbstractValidator<RegisterRequest>
