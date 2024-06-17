@@ -1,10 +1,12 @@
 ﻿using Business.Abstract;
+using Business.ValidationRules;
 using Domain.Dtos;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Utility.Results;
 using Utiliy.Abstract;
+using Utiliy.Aspects.Validation;
 using Utiliy.Messages;
 
 namespace Business.Concrete
@@ -27,6 +29,7 @@ namespace Business.Concrete
             return new SuccessDataResult<UserDetailsDto>(result);
         }
 
+        [ValidationAspect(typeof(LoginValidator))]
         public async Task<IDataResult<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
         {
             var response = new LoginResponse();
@@ -61,6 +64,7 @@ namespace Business.Concrete
             return new SuccessDataResult<LoginResponse>(response, "Success");
         }
 
+        [ValidationAspect(typeof(RegisterValidator))]
         public async Task<IDataResult<RegisterResponse>> RegisterAsync(RegisterRequest request , CancellationToken cancellationToken)
         {
             
