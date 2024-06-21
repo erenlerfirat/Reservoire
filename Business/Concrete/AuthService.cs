@@ -2,11 +2,13 @@
 using Business.ValidationRules;
 using Domain.Dtos;
 using Domain.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Utility.Results;
 using Utiliy.Abstract;
 using Utiliy.Aspects.Validation;
+using Utiliy.Logger;
 using Utiliy.Messages;
 
 namespace Business.Concrete
@@ -16,11 +18,16 @@ namespace Business.Concrete
         private readonly CoreDbContext context;
         private readonly IHashHelper hashHelper;
         private readonly IJwtHelper jwtHelper;
-        public AuthService(CoreDbContext context, IHashHelper hashHelper , IJwtHelper jwtHelper)
+        private readonly ILog<AuthService> logger;
+        public AuthService(CoreDbContext context,
+            IHashHelper hashHelper ,
+            IJwtHelper jwtHelper , 
+            ILog<AuthService> logger)
         {
             this.context = context;
             this.hashHelper = hashHelper;
             this.jwtHelper = jwtHelper;
+            this.logger = logger;
         }
 
         public IDataResult<UserDetailsDto> GetUserDetails(string token)
@@ -60,7 +67,10 @@ namespace Business.Concrete
                 RoleType = role.RoleType
             };
             response.Token = jwtHelper.CreateToken(tokenRequest);
+
             await transaction.CommitAsync();
+
+            logger.Info($"AuthService Login success {request.Email}");
             return new SuccessDataResult<LoginResponse>(response, "Success");
         }
 

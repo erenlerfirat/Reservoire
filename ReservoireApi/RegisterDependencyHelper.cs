@@ -1,11 +1,15 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Business.DependencyResolver;
+using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Utiliy.Abstract;
 using Utiliy.Helper;
+using Utiliy.Inceptors;
+using Utiliy.Logger;
 
 namespace Reservoire
 {
@@ -63,7 +67,9 @@ namespace Reservoire
             #region Dependencies
 
             services.AddDbContext<CoreDbContext>(options => options.UseSqlServer(AppSettingsHelper.GetValue("ConnectionString", "")));
-            
+
+            services.AddSingleton(typeof(ILog<>), typeof(Utiliy.Logger.Logger<>));
+
             services.AddScoped<IJwtHelper, JwtHelper>();
             services.AddSingleton<IHashHelper, HashHelper>();
 
@@ -71,6 +77,7 @@ namespace Reservoire
             services.AddScoped<IReservationService, ReservationService>();
 
             services.AddScoped<IUserService, UserService>();
+
             #endregion
         }
     }

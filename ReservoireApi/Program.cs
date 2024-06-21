@@ -1,4 +1,7 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Business.Concrete;
+using Business.DependencyResolver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +16,11 @@ namespace Reservoire
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+            builder.Host.ConfigureContainer<ContainerBuilder>(
+               builder => builder.RegisterModule(new AutofacBusinessModule()));
 
             // Add services to the container.
             //builder.Services.AddAuthorization();
@@ -45,17 +53,6 @@ namespace Reservoire
                 app.UseCors("CorsPolicy");
             }
             app.UseRouting();
-            
-
-            //app.Use(async (context, next) =>
-            //{
-            //    await next();
-
-            //    if (context.Response.StatusCode == (int)System.Net.HttpStatusCode.Unauthorized)
-            //    {
-            //        await context.Response.WriteAsync("Token Validation Has Failed. Request Access Denied");
-            //    }
-            //});
 
             app.UseAuthorization();
             app.UseAuthorization();
